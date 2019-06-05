@@ -25,9 +25,9 @@ export class UsersService {
 	}
 
 	async create(data: CreateUserDto): Promise<User> {
-		let { username, password, email } = data;
+		let { name, password, email, phone } = data;
 		password = await hash(password, 8);
-		return await this.repository.create({ username, email, password });
+		return await this.repository.create({ name, email, password, phone });
 	}
 
 	async save(user: User): Promise<User> {
