@@ -5,7 +5,6 @@ import { Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
 import * as passport from 'passport';
-import * as MySQLStore from 'express-mysql-session';
 
 const port = process.env.PORT || 8080;
 
@@ -22,12 +21,13 @@ async function bootstrap() {
 
   const options = {
     host: process.env.DB_HOST,
-    port: 3306,
+    port: process.env.DB_PORT,
     user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    password: process.env.DB_PASS,
     database: process.env.DB_NAME
   };
 
+  const MySQLStore = require('express-mysql-session')(session);
   const sessionStore = new MySQLStore(options);
  
   app.use(session({
