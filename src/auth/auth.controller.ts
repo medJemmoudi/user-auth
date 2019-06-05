@@ -6,9 +6,11 @@ import { LoginUser } from './decorators/login.decorator';
 import { User } from '../entity/user.entity';
 import { SignupUser } from './decorators/signup.decorator';
 import { SignupUserDto } from './dto/signup.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
+    constructor(private readonly jwtService: JwtService){}
 
     @Post('login')
     public async login(
@@ -21,7 +23,15 @@ export class AuthController {
             }
             
             req.logIn(user, (err: any) => {
-                req.session.save(() => res.json(req.user));
+                let payload = `${user.name}${user.id}`;
+                const accessToken = this.jwtService.sign(payload);
+                const responseData = {
+                    access_token: accessToken,
+                    expires_in: 3600,
+                    user_id: payload,
+                    payload: user
+                };
+                req.session.save(() => res.json(responseData));
             });
         })(req, res, next);
     }
@@ -41,7 +51,15 @@ export class AuthController {
              *  using AuthService instance, then the user will be logged in
              */
             req.logIn(user, (err: any) => {
-                req.session.save(() => res.json(req.user));
+                let payload = `${user.name}${user.id}`;
+                const accessToken = this.jwtService.sign(payload);
+                const responseData = {
+                    access_token: accessToken,
+                    expires_in: 3600,
+                    user_id: payload,
+                    payload: user
+                };
+                req.session.save(() => res.json(responseData));
             });
         })(req, res, next);
     }
