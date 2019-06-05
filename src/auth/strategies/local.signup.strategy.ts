@@ -14,7 +14,7 @@ export class LocalSignupStrategy extends PassportStrategy(Strategy, 'local-signu
         });
     }
 
-    public async validate(req, email, password) {
+    public async validate(req: any, email: string, password: string) {
         const { name, phone } = req.body;
         const user: User = await this.service.registerUser({ email, password, name, phone });
         if (user) {
